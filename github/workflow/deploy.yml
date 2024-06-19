@@ -1,9 +1,33 @@
-build:
+name: Python3 CI
 
-  docker:
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
-    worker: Dockerfile
+jobs:
+  build:
 
-run:
+    runs-on: ubuntu-latest
 
-  worker: bash start.sh
+    strategy:
+      matrix:
+        Python-version: [3.x]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python3 bot.py
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: python3 bot.py
+
+    - name: Start application
+      run: worker: bash start.sh
